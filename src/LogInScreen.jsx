@@ -9,7 +9,7 @@ export const LogInScreen = ({navigation}) => {
                 <TextInput placeholder="Password" style={styles.input} secureTextEntry= {true} />
             </View>
             <View style={styles.buttonContainer}>
-            <TouchableOpacity onPress={() => navigation.navigate('Home')}>
+            <TouchableOpacity onPress={() => navigation.navigate('HomeScreen')}>
               <Text style={styles.buttonText}>Iniciar Sesión</Text>
             </TouchableOpacity>
             </View>

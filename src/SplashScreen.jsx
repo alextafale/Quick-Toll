@@ -1,4 +1,3 @@
-import { title } from 'process';
 import {View, Text, SafeAreaView, TouchableOpacity, StyleSheet,ImageBackground} from 'react-native';
 export const SplashScreen = ({navigation}) => {
         useEffect(() => {
