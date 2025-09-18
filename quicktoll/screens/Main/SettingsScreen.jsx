@@ -2,18 +2,17 @@ import { View, Text, ScrollView, TouchableOpacity, Switch, StyleSheet } from 're
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const SettingsScreen = () => {
+const SettingsScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <ScrollView style={styles.scrollView}>
         <View style={styles.container}>
           <Text style={styles.title}>Settings</Text>
           
-          {/* Account Section */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Account</Text>
             
-            <TouchableOpacity style={styles.option} option>
+            <TouchableOpacity style={styles.option} onPress={() => {navigation.navigate('UserScreen')}}>
               <View style={styles.optionLeft}>
                 <Icon name="person" size={24} color="#333" style={styles.icon} />
                 <View style={styles.optionContent}>
@@ -35,7 +34,7 @@ const SettingsScreen = () => {
               <Icon name="chevron-right" size={24} color="#999" />
             </TouchableOpacity>
             
-            <TouchableOpacity style={styles.option}>
+            <TouchableOpacity style={styles.option} onPress={() => {navigation.navigate('EditInfVehiclesScreen')}}>
               <View style={styles.optionLeft}>
                 <Icon name="directions-car" size={24} color="#333" style={styles.icon} />
                 <View style={styles.optionContent}>
@@ -47,7 +46,6 @@ const SettingsScreen = () => {
             </TouchableOpacity>
           </View>
           
-          {/* Notifications Section */}
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Notifications</Text>
             
@@ -59,15 +57,13 @@ const SettingsScreen = () => {
                   <Text style={styles.optionDescription}>Manage your notification preferences</Text>
                 </View>
               </View>
-              <Switch value={false} />
             </View>
           </View>
-          
-          {/* Support Section */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Support</Text>
+
+       <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Account</Text>
             
-            <View style={styles.option}>
+            <TouchableOpacity style={styles.option} onPress={() => {navigation.navigate('HelpCenterScreen')}}>
               <View style={styles.optionLeft}>
                 <Icon name="help-center" size={24} color="#333" style={styles.icon} />
                 <View style={styles.optionContent}>
@@ -75,10 +71,10 @@ const SettingsScreen = () => {
                   <Text style={styles.optionDescription}>Get help with QuickTool</Text>
                 </View>
               </View>
-              <Switch value={true} />
-            </View>
+              <Icon name="chevron-right" size={24} color="#999" />
+            </TouchableOpacity>
             
-            <View style={styles.option}>
+            <TouchableOpacity style={styles.option} onPress={() => {navigation.navigate('HelpCenterScreen')}}>
               <View style={styles.optionLeft}>
                 <Icon name="contact-support" size={24} color="#333" style={styles.icon} />
                 <View style={styles.optionContent}>
@@ -86,8 +82,20 @@ const SettingsScreen = () => {
                   <Text style={styles.optionDescription}>Contact us for support</Text>
                 </View>
               </View>
-              <Switch value={false} />
-            </View>
+              <Icon name="chevron-right" size={24} color="#999" />
+            </TouchableOpacity>
+
+            <TouchableOpacity style={styles.option} onPress={() => {navigation.navigate('LogOutScreen')}}>
+              <View style={styles.optionLeft}>
+                <Icon name="log-out" size={24} color="#333" style={styles.icon} />
+                <View style={styles.optionContent}>
+                  <Text style={styles.optionTitle}>Log Out</Text>
+                  <Text style={styles.optionDescription}>Log out of your account</Text>
+                </View>
+              </View>
+              <Icon name="chevron-right" size={24} color="#999" />
+            </TouchableOpacity>
+
           </View>
         </View>
       </ScrollView>

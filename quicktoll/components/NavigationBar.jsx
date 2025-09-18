@@ -56,16 +56,7 @@ export default function NavigationBar({ state, descriptors, navigation }) {
               />
             </Animated.View>
           );
-        } else if (route.name === 'HistoryScreen') {
-          icon = (
-            <Animated.View style={{ transform: [{ scale: scaleValue }] }}>
-              <Feather
-                name="clock"
-                size={28}
-                color={isFocused ? '#007AFF' : '#888'}
-              />
-            </Animated.View>
-          );
+        
         } else if (route.name === 'PaymentsScreen') {
           icon = (
             <Animated.View style={{ transform: [{ scale: scaleValue }] }}>

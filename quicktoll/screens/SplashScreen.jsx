@@ -1,30 +1,38 @@
-import { View, Text, SafeAreaView, StyleSheet } from 'react-native';
+import { View, Text, SafeAreaView, StyleSheet, Platform, ImageBackground,StatusBar } from 'react-native';
 import { useEffect } from 'react';
 
-export const SplashScreen = ({ navigation }) => {
+const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('MainApp', { screen: 'SettingsScreen' });
-    }, 3500);
+      navigation.navigate('LogInScreen');
+    }, 5000);
 
     return () => clearTimeout(timer);
   }, [navigation]);
 
   return (
     <SafeAreaView style={styles.container}>
-    
-      <ImageBackground
-        source={require('../assets/logoQUICKTOLL.png')} 
-        style={{ flex: 1 }}
-      >
-      </ImageBackground >
+      <StatusBar
+        barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
+      />
+      <View style={styles.container}>
+        <ImageBackground
+          source={require('../assets/LOGO.jpg')}
+          style={styles.imageBackground}
+        />
+      </View>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1},
+    flex: 1,
+
+  },
+  imageBackground: {
+    flex: 1
+  },
 });
 
 export default SplashScreen;

@@ -4,11 +4,11 @@
     "slug": "quicktoll",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/logoQUICKTOLL.png",
+    "icon": "./assets/logo_size.jpg",
     "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/logo_size.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

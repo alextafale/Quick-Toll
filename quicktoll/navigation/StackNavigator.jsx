@@ -9,7 +9,7 @@ import NavigationBar from '../components/NavigationBar';
 // Imports Auth Screens
 import SignUpScreen from '../screens/Auth/SignUpScreen';
 import LogInScreen from '../screens/Auth/LogInScreen';
-import ForgottenPasswordScreen from '../screens/Auth/ForgottenPasswordScreen';
+import ChangePasswordScreen from '../screens/Auth/ChangePasswordScreen';
 
 // Main Screens
 import AddBalancesScreen from '../screens/Main/AddBalancesScreen';
@@ -19,7 +19,9 @@ import PaymentsMethodsScreen from '../screens/Main/PaymentsMethodsScreen';
 import PaymentsScreen from '../screens/Main/PaymentsScreen';
 import SettingsScreen from '../screens/Main/SettingsScreen';
 import VehicleScreen from '../screens/Main/VehicleScreen';
-
+import AddVehicleScreen from '../screens/Main/AddVehicleScreen';
+import UserScreen from '../screens/Main/UserScreen';
+import EditInfVehiclesScreen from '../screens/Main/EditInfVehiclesScreen';
 // Support Screens
 import ContactUsScreen from '../screens/Support/ContactUsScreen';
 import HelpCenterScreen from '../screens/Support/HelpCenterScreen';
@@ -51,11 +53,6 @@ function MainTabNavigator() {
         options={{ tabBarLabel: 'Vehicles' }}
       />
       <Tab.Screen
-        name="HistoryScreen"
-        component={HistoryScreen}
-        options={{ tabBarLabel: 'History' }}
-      />
-      <Tab.Screen
         name="PaymentsScreen"
         component={PaymentsScreen}
         options={{ tabBarLabel: 'Payments' }}
@@ -77,8 +74,7 @@ export default function StackNavigator() {
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
         <Stack.Screen name="LogInScreen" component={LogInScreen} />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
-        <Stack.Screen name="ForgottenPasswordScreen" component={ForgottenPasswordScreen} />
-        
+        <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
         {/* Main App with Tab Navigation - CORRECCIÓN AQUÍ */}
         <Stack.Screen name="MainApp" component={MainTabNavigator} />
         
@@ -88,6 +84,9 @@ export default function StackNavigator() {
         <Stack.Screen name="HelpCenterScreen" component={HelpCenterScreen} />
         <Stack.Screen name="PaymentsMethodsScreen" component={PaymentsMethodsScreen} />
         <Stack.Screen name="VehicleScreen" component={VehicleScreen} />
+        <Stack.Screen name="AddVehicleScreen" component={AddVehicleScreen} />
+        <Stack.Screen name="UserScreen" component={UserScreen} />
+        <Stack.Screen name="EditInfVehiclesScreen" component={EditInfVehiclesScreen}  />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -6,7 +6,6 @@ export const PaymentsScreen = ({ navigation }) => {
         <SafeAreaView style={styles.safeArea}>
             <ScrollView style={styles.scrollView}>
                 <View style={styles.container}>
-// Header con Saldo Disponible
                     <View style={styles.headerContainer}>
                         <Text style={styles.subtitle}>Saldo disponible</Text>
                         <Text style={styles.balance}>$1,250.00 MXN</Text>
@@ -16,7 +15,6 @@ export const PaymentsScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
 
-// Payment Methods Section
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Métodos de Pago</Text>
                         
@@ -69,7 +67,6 @@ export const PaymentsScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
 
-// Recent Payments Section
                     <View style={styles.section}>
                         <View style={styles.sectionHeader}>
                             <Text style={styles.sectionTitle}>Pagos Recientes</Text>
@@ -85,7 +82,7 @@ export const PaymentsScreen = ({ navigation }) => {
                                         <Ionicons name="car-sport" size={20} color="#1976D2" />
                                     </View>
                                     <View style={styles.paymentInfo}>
-                                        <Text style={styles.paymentTitle}>Estacionamiento Centro</Text>
+                                        <Text style={styles.paymentTitle}>Caseta 1</Text>
                                         <Text style={styles.paymentDate}>Hoy, 14:30</Text>
                                     </View>
                                 </View>
@@ -120,15 +117,14 @@ export const PaymentsScreen = ({ navigation }) => {
                         </View>
                     </View>
 
-// Quick Actions Section
                     <View style={styles.section}>
                         <Text style={styles.sectionTitle}>Acciones Rápidas</Text>
                         <View style={styles.quickActions}>
                             <TouchableOpacity style={styles.quickActionButton}>
-                                <View style={[styles.actionIcon, { backgroundColor: '#FFECB3' }]}>
-                                    <Ionicons name="qr-code" size={24} color="#FFA000" />
+                                <View style={[styles.actionIcon, { backgroundColor: '#a2a2a2ff' }]}>
+                                    <FontAwesome5 name="credit-card" size={24} color="#000000ff" />
                                 </View>
-                                <Text style={styles.actionText}>Pagar con QR</Text>
+                                <Text style={styles.actionText}>Agregar/Eliminar tarjetas</Text>
                             </TouchableOpacity>
 
                             <TouchableOpacity style={styles.quickActionButton}>

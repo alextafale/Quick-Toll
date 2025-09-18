@@ -18,7 +18,7 @@ const SignUpScreen = ({ navigation }) => {
                     <TextInput style={styles.inputs} placeholder="Confirmar Contraseña" secureTextEntry={true} onChangeText={setContraseña}/>
                 </View>
                 <View style={styles.container}>
-                    <TouchableOpacity style={styles.button} onPress={() => Alert.alert('Usuario registrado exitosamente')}>
+                    <TouchableOpacity style={styles.button} onPress={() => { Alert.alert('Usuario registrado exitosamente'); navigation.replace('HomeScreen'); }}>
                         <Text style={styles.buttonText}>Registrarse</Text>
                     </TouchableOpacity>
                 </View>
@@ -28,7 +28,7 @@ const SignUpScreen = ({ navigation }) => {
         </SafeAreaView>
     );
 }
-
+{}
 const styles = StyleSheet.create({
     safeStyle:{
         flex: 1,

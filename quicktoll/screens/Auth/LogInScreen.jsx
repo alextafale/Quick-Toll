@@ -92,9 +92,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-  alignContent: "center",
-  marginTop: "2%",
-  color: 'white',
+    alignContent: "center",
+    justifyContent: "center",
+    borderRadius: 20,
   },
   buttonText: {
     color: 'white',
