@@ -1,51 +1,138 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Button, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard, Image, Animated } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function LogInScreen({navigation}) {
 
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
+  const [secureEntry, setSecureEntry] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const fadeAnim = useState(new Animated.Value(0))[0];
+
+  React.useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 800,
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   const handleLogin = async () => {
-    // Aquí irá la lógica de autenticación con backend
-    // Si es exitoso:
-    navigation.replace('HomeScreen'); 
+    setIsLoading(true);
+    // Simular proceso de autenticación
+    setTimeout(() => {
+      setIsLoading(false);
+      // Aquí irá la lógica de autenticación con backend
+      // Si es exitoso:
+      navigation.navigate('MainApp', { screen: 'HomeScreen' }); 
+    }, 1500);
   };
 
   return (
     <SafeAreaView style={styles.safeStyle}>
-      <View style={styles.container}>
-        <Text style={styles.brandName}>QuickToll</Text>
-        <Text style={styles.textBack}>Bienvenido</Text>
-        <View style={styles.inputsContainer}>
-          <TextInput
-            placeholder="Email"
-            value={correo}
-            style={styles.inputs}
-            onChangeText={setCorreo}
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-          <TextInput
-            placeholder="Contraseña"
-            value={contraseña}
-            style={styles.inputs}
-            secureTextEntry={true}
-            onChangeText={setContraseña}
-          />
-        </View>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleLogin} style={styles.button}>
-            <Text style={styles.buttonText}>Iniciar Sesión</Text>
-          </TouchableOpacity>
-        </View>
-        <Button
-          style={styles.button}
-          onPress={() => navigation.replace('SignUpScreen')}
-          title="¿No tienes cuenta? Regístrate"
-        />
-      </View>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={styles.keyboardView}
+      >
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <Animated.View style={[styles.container, { opacity: fadeAnim }]}>
+            <View style={styles.logoContainer}>
+              <Image 
+                source={require('../../assets/image.png')} 
+                style={styles.logo}
+                resizeMode="contain"
+              />
+              <Text style={styles.brandName}>QuickToll</Text>
+              <Text style={styles.tagline}>Viaja sin preocupaciones</Text>
+            </View>
+            
+            <Text style={styles.welcomeText}>Bienvenido</Text>
+            <Text style={styles.subtitle}>Inicia sesión en tu cuenta</Text>
+            
+            <View style={styles.inputsContainer}>
+              <View style={styles.inputWrapper}>
+                <Ionicons name="mail-outline" size={20} color="#4C759D" style={styles.inputIcon} />
+                <TextInput
+                  placeholder="Correo electrónico"
+                  placeholderTextColor="#9BB0CB"
+                  value={correo}
+                  style={styles.inputs}
+                  onChangeText={setCorreo}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+              
+              <View style={styles.inputWrapper}>
+                <Ionicons name="lock-closed-outline" size={20} color="#4C759D" style={styles.inputIcon} />
+                <TextInput
+                  placeholder="Contraseña"
+                  placeholderTextColor="#9BB0CB"
+                  value={contraseña}
+                  style={styles.inputs}
+                  secureTextEntry={secureEntry}
+                  onChangeText={setContraseña}
+                />
+                <TouchableOpacity 
+                  style={styles.eyeIcon} 
+                  onPress={() => setSecureEntry(!secureEntry)}
+                >
+                  <Ionicons 
+                    name={secureEntry ? "eye-off-outline" : "eye-outline"} 
+                    size={20} 
+                    color="#4C759D" 
+                  />
+                </TouchableOpacity>
+              </View>
+              
+              <TouchableOpacity style={styles.forgotPassword}>
+                <Text style={styles.forgotPasswordText}>¿Olvidaste tu contraseña?</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity 
+                onPress={handleLogin} 
+                style={[styles.button, isLoading && styles.buttonDisabled]}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Ionicons name="refresh" size={24} color="white" style={styles.loadingIcon} />
+                ) : (
+                  <Text style={styles.buttonText}>Iniciar Sesión</Text>
+                )}
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.separator}>
+              <View style={styles.separatorLine} />
+              <Text style={styles.separatorText}>o</Text>
+              <View style={styles.separatorLine} />
+            </View>
+            
+            <View style={styles.socialLoginContainer}>
+              <TouchableOpacity style={styles.socialButton}>
+                <Ionicons name="logo-google" size={20} color="#DB4437" />
+                <Text style={styles.socialButtonText}>Google</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity style={styles.socialButton}>
+                <Ionicons name="logo-facebook" size={20} color="#4267B2" />
+                <Text style={styles.socialButtonText}>Facebook</Text>
+              </TouchableOpacity>
+            </View>
+            
+            <View style={styles.signupContainer}>
+              <Text style={styles.signupText}>¿No tienes cuenta? </Text>
+              <TouchableOpacity onPress={() => navigation.replace('SignUpScreen')}>
+                <Text style={styles.signupLink}>Regístrate</Text>
+              </TouchableOpacity>
+            </View>
+          </Animated.View>
+        </TouchableWithoutFeedback>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -55,50 +142,164 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff', 
   },
+  keyboardView: {
+    flex: 1,
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 24,
+  },
+  logoContainer: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  logo: {
+    width: 80,
+    height: 80,
+    marginBottom: 8,
+  },
   brandName: {
-    marginBottom: "3%",
-    fontSize: 17,
+    fontSize: 28,
     fontWeight: 'bold',
     color: '#3D99F5',
+    marginBottom: 4,
   },
-  textBack: {
-    fontSize: 20,
-    marginVertical: "3%",
-    fontWeight: '600',
+  tagline: {
+    fontSize: 14,
+    color: '#7B8794',
   },
-  inputs: {
-    width: "90%",
-    height: 50,
-    paddingHorizontal: 16, //Para que el texto no toque el borde
-    backgroundColor: '#E7EDF4',
-    borderRadius: 7,
-    marginVertical: "3%",
-    color: '#4C759D',
+  welcomeText: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginBottom: 8,
+  
+  },
+  subtitle: {
     fontSize: 16,
+    color: '#6B7280',
+    marginBottom: 32,
   },
   inputsContainer: {
     width: "100%",
     alignItems: "center",
+    marginBottom: 24,
   },
-  container: {
-    flex: 1, // Para que ocupe todo el espacio disponible
-    justifyContent: 'center', // Centrado vertical
+  inputWrapper: {
+    flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
+    width: "100%",
+    position: 'relative',
+    marginBottom: 16,
+  },
+  inputs: {
+    flex: 1,
+    height: 56,
+    paddingHorizontal: 48,
+    backgroundColor: '#F8FAFC',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    color: '#1F2937',
+    fontSize: 16,
+  },
+  inputIcon: {
+    position: 'absolute',
+    left: 16,
+    zIndex: 1,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+  },
+  forgotPassword: {
+
+    marginTop: 8,
+  },
+  forgotPasswordText: {
+    color: '#3D99F5',
+    fontSize: 14,
+    fontWeight: '500',
   },
   buttonContainer: {
     width: "100%",
     alignItems: "center",
+    marginBottom: 24,
   },
   button: {
-    alignContent: "center",
-    justifyContent: "center",
-    borderRadius: 20,
+    width: '100%',
+    height: 56,
+    backgroundColor: '#3D99F5',
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#3D99F5',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  buttonDisabled: {
+    opacity: 0.7,
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
+    fontWeight: '600',
+  },
+  loadingIcon: {
+    transform: [{ rotate: '0deg' }],
+  },
+  separator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: 24,
+  },
+  separatorLine: {
+    flex: 1,
+    height: 1,
+    backgroundColor: '#E5E7EB',
+  },
+  separatorText: {
+    marginHorizontal: 16,
+    color: '#6B7280',
+    fontSize: 14,
+  },
+  socialLoginContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 32,
+  },
+  socialButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '48%',
+    height: 48,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#FFFFFF',
+  },
+  socialButtonText: {
+    marginLeft: 8,
+    color: '#374151',
+    fontWeight: '500',
+  },
+  signupContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  signupText: {
+    color: '#6B7280',
+  },
+  signupLink: {
+    color: '#3D99F5',
     fontWeight: '600',
   }
 });

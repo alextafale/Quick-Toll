@@ -1,71 +1,169 @@
 import React from 'react';
-import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet, StatusBar, Switch } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, TouchableOpacity, StyleSheet, StatusBar, Image } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 const UserScreen = ({ navigation }) => {
   // Datos de ejemplo del usuario
   const user = {
-    name: "Alejandro",
+    name: "Alejandro Alejandre",
     id: "1234567890",
     email: "alejandro@example.com",
-    phone: "3521065471",
-    status: "Active"
+    phone: "+52 352 106 5471",
+    status: "Active",
+    joinDate: "15 Ene 2024",
+    avatar: require('../../assets/user.png') 
   };
+
+  const menuOptions = [
+    {
+      id: '1',
+      title: 'Cambiar Contraseña',
+      icon: 'lock-closed-outline',
+      screen: 'ChangePasswordScreen',
+      color: '#3D99F5'
+    },
+    {
+      id: '2',
+      title: 'Mis Vehículos',
+      icon: 'car-outline',
+      screen: 'VehicleScreen',
+      color: '#10B981'
+    },
+    {
+      id: '3',
+      title: 'Métodos de Pago',
+      icon: 'card-outline',
+      screen: 'PaymentsMethodsScreen',
+      color: '#F59E0B'
+    },
+    {
+      id: '4',
+      title: 'Historial de Viajes',
+      icon: 'time-outline',
+      screen: 'HistoryScreen',
+      color: '#8B5CF6'
+    },
+    {
+      id: '5',
+      title: 'Centro de Ayuda',
+      icon: 'help-circle-outline',
+      screen: 'HelpCenterScreen',
+      color: '#6366F1'
+    },
+    {
+      id: '6',
+      title: 'Contactarnos',
+      icon: 'chatbubble-ellipses-outline',
+      screen: 'ContactUsScreen',
+      color: '#EC4899'
+    }
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
       
+      {/* Header */}
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Profile</Text>
+        <Text style={styles.headerTitle}>Mi Perfil</Text>
+        <TouchableOpacity style={styles.settingsButton}>
+          <Ionicons name="settings-outline" size={24} color="#3D99F5" />
+        </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.scrollView}>
-        <View style={styles.profileSection}>
-          <View style={styles.infoItem}>
-            <Text style={styles.label}>Name</Text>
-            <Text style={styles.value}>{user.name}</Text>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Sección de Perfil */}
+        <View style={styles.profileCard}>
+          <View style={styles.avatarContainer}>
+            <Image 
+              source={user.avatar} 
+              style={styles.avatar}
+              defaultSource={require('../../assets/user.png')}
+            />
+            <View style={[styles.statusBadge, styles.activeStatus]}>
+              <Ionicons name="checkmark" size={12} color="#FFFFFF" />
+            </View>
           </View>
           
-          <View style={styles.infoItem}>
-            <Text style={styles.label}>ID</Text>
-            <Text style={styles.value}>{user.id}</Text>
-          </View>
+          <Text style={styles.userName}>{user.name}</Text>
+          <Text style={styles.userEmail}>{user.email}</Text>
           
-          <View style={styles.infoItem}>
-            <Text style={styles.label}>Email</Text>
-            <Text style={styles.value}>{user.email}</Text>
-          </View>
-          
-          <View style={styles.infoItem}>
-            <Text style={styles.label}>Phone</Text>
-            <Text style={styles.value}>{user.phone}</Text>
-          </View>
-          
-          <View style={styles.infoItem}>
-            <Text style={styles.label}>Status</Text>
-            <View style={styles.statusContainer}>
-              <Text style={[styles.statusText, styles.activeStatus]}>{user.status}</Text>
+          <View style={styles.statsContainer}>
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>3</Text>
+              <Text style={styles.statLabel}>Vehículos</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>12</Text>
+              <Text style={styles.statLabel}>Viajes</Text>
+            </View>
+            <View style={styles.statDivider} />
+            <View style={styles.statItem}>
+              <Text style={styles.statNumber}>$450</Text>
+              <Text style={styles.statLabel}>Gastado</Text>
             </View>
           </View>
         </View>
 
-        <View style={styles.optionsSection}>
-          <TouchableOpacity 
-            style={styles.optionItem}
-            onPress={() => navigation.navigate('ChangePasswordScreen')}
-          >
-            <Text style={styles.optionText}>Change Password</Text>
-            <Text style={styles.optionArrow}>›</Text>
-          </TouchableOpacity>
-          
-          <TouchableOpacity 
-            style={styles.optionItem}
-            onPress={() => navigation.navigate('VehicleScreen')}
-          >
-            <Text style={styles.optionText}>Vehicles</Text>
-            <Text style={styles.optionArrow}>›</Text>
-          </TouchableOpacity>
+        {/* Información Personal */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Información Personal</Text>
+          <View style={styles.infoGrid}>
+            <View style={styles.infoItem}>
+              <Ionicons name="person-outline" size={18} color="#6B7280" />
+              <Text style={styles.infoLabel}>ID de Usuario</Text>
+              <Text style={styles.infoValue}>{user.id}</Text>
+            </View>
+            
+            <View style={styles.infoItem}>
+              <Ionicons name="call-outline" size={18} color="#6B7280" />
+              <Text style={styles.infoLabel}>Teléfono</Text>
+              <Text style={styles.infoValue}>{user.phone}</Text>
+            </View>
+            
+            <View style={styles.infoItem}>
+              <Ionicons name="calendar-outline" size={18} color="#6B7280" />
+              <Text style={styles.infoLabel}>Miembro desde</Text>
+              <Text style={styles.infoValue}>{user.joinDate}</Text>
+            </View>
+            
+            <View style={styles.infoItem}>
+              <Ionicons name="shield-checkmark-outline" size={18} color="#6B7280" />
+              <Text style={styles.infoLabel}>Estado</Text>
+              <View style={[styles.statusPill, styles.activeStatus]}>
+                <Text style={styles.statusText}>Verificado</Text>
+              </View>
+            </View>
+          </View>
         </View>
+
+        {/* Menú de Opciones */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Configuración</Text>
+          {menuOptions.map((option) => (
+            <TouchableOpacity 
+              key={option.id}
+              style={styles.optionItem}
+              onPress={() => navigation.navigate(option.screen)}
+            >
+              <View style={[styles.optionIcon, { backgroundColor: option.color + '20' }]}>
+                <Ionicons name={option.icon} size={20} color={option.color} />
+              </View>
+              <Text style={styles.optionText}>{option.title}</Text>
+              <Ionicons name="chevron-forward" size={20} color="#D1D5DB" />
+            </TouchableOpacity>
+          ))}
+        </View>
+
+        {/* Botón de Cerrar Sesión */}
+        <TouchableOpacity 
+          style={styles.logoutButton}
+          onPress={() => navigation.navigate('LogOutScreen')}
+        >
+          <Ionicons name="log-out-outline" size={20} color="#DC2626" />
+          <Text style={styles.logoutText}>Cerrar Sesión</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -74,74 +172,187 @@ const UserScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#F8FAFC',
   },
   header: {
-    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: 20,
+    backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
-    backgroundColor: '#fff',
+    borderBottomColor: '#F3F4F6',
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    textAlign: 'center',
+    color: '#1F2937',
+  },
+  settingsButton: {
+    padding: 8,
   },
   scrollView: {
     flex: 1,
   },
-  profileSection: {
-    backgroundColor: '#fff',
-    marginTop: 16,
-    paddingHorizontal: 16,
-  },
-  infoItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  profileCard: {
+    backgroundColor: '#FFFFFF',
+    margin: 20,
+    padding: 24,
+    borderRadius: 20,
     alignItems: 'center',
-    paddingVertical: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 3,
   },
-  label: {
-    fontSize: 16,
-    color: '#666',
+  avatarContainer: {
+    position: 'relative',
+    marginBottom: 16,
   },
-  value: {
-    fontSize: 16,
-    fontWeight: '500',
-    color: '#333',
+  avatar: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 3,
+    borderColor: '#EFF6FF',
   },
-  statusContainer: {
-    backgroundColor: '#e8f5e8',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 12,
+  statusBadge: {
+    position: 'absolute',
+    bottom: 0,
+    right: 0,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
   },
   activeStatus: {
-    color: '#2e7d32',
-    fontWeight: '500',
+    backgroundColor: '#10B981',
   },
-  optionsSection: {
-    backgroundColor: '#fff',
-    marginTop: 16,
-    paddingHorizontal: 16,
+  userName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginBottom: 4,
+  },
+  userEmail: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginBottom: 20,
+  },
+  statsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+  },
+  statItem: {
+    alignItems: 'center',
+  },
+  statNumber: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#3D99F5',
+    marginBottom: 4,
+  },
+  statLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+  },
+  statDivider: {
+    width: 1,
+    height: 30,
+    backgroundColor: '#E5E7EB',
+  },
+  section: {
+    backgroundColor: '#FFFFFF',
+    marginHorizontal: 20,
+    marginBottom: 20,
+    padding: 20,
+    borderRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#1F2937',
+    marginBottom: 16,
+  },
+  infoGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  infoItem: {
+    width: '48%',
+    marginBottom: 16,
+  },
+  infoLabel: {
+    fontSize: 12,
+    color: '#6B7280',
+    marginTop: 4,
+    marginBottom: 2,
+  },
+  infoValue: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#1F2937',
+  },
+  statusPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#065F46',
   },
   optionItem: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
+    borderBottomColor: '#F3F4F6',
+  },
+  optionIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 12,
   },
   optionText: {
+    flex: 1,
     fontSize: 16,
-    color: '#333',
+    color: '#1F2937',
   },
-  optionArrow: {
-    fontSize: 20,
-    color: '#999',
+  logoutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FEF2F2',
+    margin: 20,
+    padding: 16,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#FECACA',
+  },
+  logoutText: {
+    marginLeft: 12,
+    color: '#DC2626',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
 

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
-      navigation.navigate('LogInScreen');
+      navigation.navigate('WelcomeScreen');
     }, 5000);
 
     return () => clearTimeout(timer);

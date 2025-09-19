@@ -10,6 +10,7 @@ import NavigationBar from '../components/NavigationBar';
 import SignUpScreen from '../screens/Auth/SignUpScreen';
 import LogInScreen from '../screens/Auth/LogInScreen';
 import ChangePasswordScreen from '../screens/Auth/ChangePasswordScreen';
+import LogOutScreen from '../screens/Auth/LogOutScreen';
 
 // Main Screens
 import AddBalancesScreen from '../screens/Main/AddBalancesScreen';
@@ -28,6 +29,7 @@ import HelpCenterScreen from '../screens/Support/HelpCenterScreen';
 
 // Splash
 import SplashScreen from '../screens/SplashScreen';
+import WelcomeScreen from '../screens/Main/WelcomeScreen';
 
 // CONST Stack AND TABS
 const Stack = createStackNavigator();
@@ -72,7 +74,9 @@ export default function StackNavigator() {
       <Stack.Navigator initialRouteName="SplashScreen" screenOptions={{ headerShown: false }}>
         {/* Auth Flow Screens */}
         <Stack.Screen name="SplashScreen" component={SplashScreen} />
+        <Stack.Screen name="WelcomeScreen" component={WelcomeScreen} />
         <Stack.Screen name="LogInScreen" component={LogInScreen} />
+        <Stack.Screen name="LogOutScreen" component={LogOutScreen} />
         <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
         <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
         {/* Main App with Tab Navigation - CORRECCIÓN AQUÍ */}
