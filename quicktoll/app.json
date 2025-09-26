@@ -1,5 +1,6 @@
 {
   "expo": {
+    "scheme": "quicktoll",
     "name": "QuickToll",
     "slug": "quicktoll",
     "version": "1.0.0",
@@ -13,7 +14,11 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.alextafale.quicktoll",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -25,6 +30,14 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-web-browser"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "a9c865fe-e0eb-47a2-814c-3d9a9bbdf0fc"
+      }
     }
   }
 }

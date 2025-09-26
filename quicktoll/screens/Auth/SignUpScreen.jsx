@@ -1,7 +1,16 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image, Alert, TextInput, SafeAreaView } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, TextInput, SafeAreaView } from 'react-native';
 import NavigationBar from '../../components/NavigationBar';
 import { Ionicons } from '@expo/vector-icons';
+import * as AuthSession from 'expo-auth-session';
+import * as WebBrowser from 'expo-web-browser';
+import { GoogleAuthProvider, signInWithCredential, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
+import { auth } from '../../Backend/Firebase/FirebaseConfig';
+// Configuración para Expo
+WebBrowser.maybeCompleteAuthSession();
+
+const useProxy = true; // Usar proxy en desarrollo (Expo Go)
+const redirectUri = AuthSession.makeRedirectUri({ useProxy });
 
 const SignUpScreen = ({ navigation }) => {
     const [nombre, setNombre] = useState('');
@@ -10,6 +19,101 @@ const SignUpScreen = ({ navigation }) => {
     const [confirmarContraseña, setConfirmarContraseña] = useState('');
     const [secureEntry, setSecureEntry] = useState(true);
     const [secureEntryConfirm, setSecureEntryConfirm] = useState(true);
+    const [loading, setLoading] = useState(false);
+
+    const handleSignUpWithGoogle = async () => {
+        try {
+            setLoading(true);
+            
+            // Configurar la solicitud de autenticación
+            const request = new AuthSession.AuthRequest({
+                clientId: '394613431143-vbreqlodokbfk63lr68u1cnpj9vs5elb.apps.googleusercontent.com',
+                scopes: ['openid', 'profile', 'email'],
+                redirectUri: redirectUri,
+            });
+
+            // Iniciar el flujo de autenticación
+            const result = await AuthSession.startAsync({
+                authUrl: request.url,
+                returnUrl: redirectUri,
+            });
+
+            if (result.type === 'success') {
+                const { id_token } = result.params;
+                
+                if (id_token) {
+                    // Crear credencial de Firebase con el token de Google
+                    const credential = GoogleAuthProvider.credential(id_token);
+                    await signInWithCredential(auth, credential);
+                    
+                    Alert.alert('Éxito', 'Registro con Google exitoso');
+                    navigation.replace('MainApp', { screen: 'HomeScreen' });
+                } else {
+                    throw new Error('No se recibió token de Google');
+                }
+            } else {
+                throw new Error('La autenticación fue cancelada');
+            }
+        } catch (error) {
+            console.error("Error signing up with Google:", error);
+            Alert.alert('Error', 'No se pudo registrar con Google: ' + error.message);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleEmailSignUp = async () => {
+        if (!nombre || !correo || !contraseña || !confirmarContraseña) {
+            Alert.alert('Error', 'Por favor completa todos los campos');
+            return;
+        }
+
+        if (contraseña !== confirmarContraseña) {
+            Alert.alert('Error', 'Las contraseñas no coinciden');
+            return;
+        }
+
+        if (contraseña.length < 6) {
+            Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres');
+            return;
+        }
+
+        try {
+            setLoading(true);
+            
+            // Crear usuario con email y contraseña
+            const userCredential = await createUserWithEmailAndPassword(auth, correo, contraseña);
+            
+            // Actualizar perfil con el nombre
+            await updateProfile(userCredential.user, {
+                displayName: nombre
+            });
+
+            Alert.alert('Éxito', 'Usuario registrado exitosamente');
+            navigation.replace('MainApp', { screen: 'HomeScreen' });
+        } catch (error) {
+            console.error("Error signing up:", error);
+            let errorMessage = 'Error al registrar usuario';
+            
+            switch (error.code) {
+                case 'auth/email-already-in-use':
+                    errorMessage = 'Este correo ya está registrado';
+                    break;
+                case 'auth/invalid-email':
+                    errorMessage = 'Correo electrónico inválido';
+                    break;
+                case 'auth/weak-password':
+                    errorMessage = 'La contraseña es demasiado débil';
+                    break;
+                default:
+                    errorMessage = error.message;
+            }
+            
+            Alert.alert('Error', errorMessage);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <SafeAreaView style={styles.safeStyle}>
@@ -17,7 +121,7 @@ const SignUpScreen = ({ navigation }) => {
                 <Text style={styles.title}>Registro</Text>
                 
                 <View style={styles.containers}>
-                    {/* Campo Nombre */}
+                    {/* Campos de nombre, correo, contraseña (igual que antes) */}
                     <View style={styles.inputWrapper}>
                         <TextInput 
                             style={styles.inputs} 
@@ -28,7 +132,6 @@ const SignUpScreen = ({ navigation }) => {
                         />
                     </View>
 
-                    {/* Campo Correo */}
                     <View style={styles.inputWrapper}>
                         <TextInput 
                             style={styles.inputs} 
@@ -41,7 +144,6 @@ const SignUpScreen = ({ navigation }) => {
                         />
                     </View>
 
-                    {/* Campo Contraseña */}
                     <View style={styles.inputWrapper}>
                         <TextInput 
                             style={styles.inputs} 
@@ -63,7 +165,6 @@ const SignUpScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
 
-                    {/* Campo Confirmar Contraseña */}
                     <View style={styles.inputWrapper}>
                         <TextInput 
                             style={styles.inputs} 
@@ -88,13 +189,25 @@ const SignUpScreen = ({ navigation }) => {
 
                 <View style={styles.containers}>
                     <TouchableOpacity 
-                        style={styles.button} 
-                        onPress={() => { 
-                            Alert.alert('Usuario registrado exitosamente'); 
-                            navigation.replace('HomeScreen'); 
-                        }}
+                        style={[styles.button, loading && styles.buttonDisabled]} 
+                        onPress={handleEmailSignUp}
+                        disabled={loading}
                     >
-                        <Text style={styles.buttonText}>Registrarse</Text>
+                        <Text style={styles.buttonText}>
+                            {loading ? 'Registrando...' : 'Registrarse'}
+                        </Text>
+                    </TouchableOpacity>
+
+                    {/* Botón de Google actualizado */}
+                    <TouchableOpacity 
+                        style={[styles.googleButton, loading && styles.buttonDisabled]}
+                        onPress={handleSignUpWithGoogle}
+                        disabled={loading}
+                    >
+                        <Ionicons name="logo-google" size={20} color="#DB4437" />
+                        <Text style={styles.googleButtonText}>
+                            {loading ? 'Registrando...' : 'Registrarse con Google'}
+                        </Text>
                     </TouchableOpacity>
                 </View>
 
@@ -106,8 +219,9 @@ const SignUpScreen = ({ navigation }) => {
             </View>
         </SafeAreaView>
     );
-}
+};
 
+// Tus estilos existentes se mantienen igual...
 const styles = StyleSheet.create({
     safeStyle: {
         flex: 1,
@@ -135,7 +249,7 @@ const styles = StyleSheet.create({
         flex: 1,
         height: 50,
         paddingHorizontal: 16,
-        paddingRight: 45, // Espacio para el icono del ojo
+        paddingRight: 45,
         backgroundColor: '#E7EDF4',
         borderRadius: 7,
         color: '#4C759D',
@@ -168,10 +282,36 @@ const styles = StyleSheet.create({
         shadowRadius: 8,
         elevation: 4,
     },
+    googleButton: {
+        width: "90%",
+        height: 50,
+        backgroundColor: '#FFFFFF',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 7,
+        marginTop: 10,
+        borderWidth: 1,
+        borderColor: '#D8E2EE',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 2,
+    },
     buttonText: {
         color: 'white',
         fontSize: 16,
         fontWeight: '600',
+    },
+    googleButtonText: {
+        color: '#757575',
+        fontSize: 16,
+        fontWeight: '600',
+        marginLeft: 10,
+    },
+    buttonDisabled: {
+        opacity: 0.6,
     },
     textLink: {
         textDecorationLine: 'underline',

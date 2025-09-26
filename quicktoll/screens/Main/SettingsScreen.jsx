@@ -22,13 +22,13 @@ const SettingsScreen = ({ navigation }) => {
               </View>
               <Icon name="chevron-right" size={24} color="#999" />
             </TouchableOpacity>
-            
-            <TouchableOpacity style={styles.option}>
+
+            <TouchableOpacity style={styles.option} onPress={() => {navigation.navigate('AddCardScreen')}}>
               <View style={styles.optionLeft}>
                 <Icon name="payment" size={24} color="#333" style={styles.icon} />
                 <View style={styles.optionContent}>
-                  <Text style={styles.optionTitle}>Payment Methods</Text>
-                  <Text style={styles.optionDescription}>Manage your payment methods</Text>
+                  <Text style={styles.optionTitle}>Add Card</Text>
+                  <Text style={styles.optionDescription}>Add a new payment card</Text>
                 </View>
               </View>
               <Icon name="chevron-right" size={24} color="#999" />

@@ -12,7 +12,7 @@ export const HomeScreen = ({navigation}) => {
 
     return (
         <SafeAreaView style={styles.container}>
-          <StatusBar barStyle="light-content" backgroundColor="#4A90E2" />
+          <StatusBar barStyle="light-content" />
           <ScrollView>
            
             <View style={styles.headerContainer}>
@@ -28,7 +28,7 @@ export const HomeScreen = ({navigation}) => {
             <View style={styles.historyContainer}>
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Historial de Casetas</Text>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate('HistoryScreen')}>
                   <Text style={styles.seeAllText}>Ver todo</Text>
                 </TouchableOpacity>
               </View>

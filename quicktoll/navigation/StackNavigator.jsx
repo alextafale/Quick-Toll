@@ -13,6 +13,7 @@ import ChangePasswordScreen from '../screens/Auth/ChangePasswordScreen';
 import LogOutScreen from '../screens/Auth/LogOutScreen';
 
 // Main Screens
+import AddCardScreen from '../screens/Main/AddCardScreen';
 import AddBalancesScreen from '../screens/Main/AddBalancesScreen';
 import HistoryScreen from '../screens/Main/HistoryScreen';
 import HomeScreen from '../screens/Main/HomeScreen';
@@ -83,6 +84,8 @@ export default function StackNavigator() {
         <Stack.Screen name="MainApp" component={MainTabNavigator} />
         
         {/* Modal Screens (accessed from tabs) */}
+        <Stack.Screen name="AddCardScreen" component={AddCardScreen} />
+        <Stack.Screen name="HistoryScreen" component={HistoryScreen} />
         <Stack.Screen name="AddBalancesScreen" component={AddBalancesScreen} />
         <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
         <Stack.Screen name="HelpCenterScreen" component={HelpCenterScreen} />
