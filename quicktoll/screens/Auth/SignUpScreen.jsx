@@ -6,10 +6,10 @@ import * as AuthSession from 'expo-auth-session';
 import * as WebBrowser from 'expo-web-browser';
 import { GoogleAuthProvider, signInWithCredential, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../Backend/Firebase/FirebaseConfig';
-// Configuración para Expo
+import { SafeAreaView } from 'react-native-safe-area-context';
 WebBrowser.maybeCompleteAuthSession();
 
-const useProxy = true; // Usar proxy en desarrollo (Expo Go)
+const useProxy = true;
 const redirectUri = AuthSession.makeRedirectUri({ useProxy });
 
 const SignUpScreen = ({ navigation }) => {

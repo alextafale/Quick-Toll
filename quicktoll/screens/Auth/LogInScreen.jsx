@@ -13,7 +13,6 @@ import { auth } from '../../Backend/Firebase/FirebaseConfig';
 
 WebBrowser.maybeCompleteAuthSession();
 
-// 👇 Tu Client ID de Google (Web)
 const CLIENT_ID = "3394613431143-vbreqlodokbfk63lr68u1cnpj9vs5elb.apps.googleusercontent.com"; 
 
 export default function LogInScreen({ navigation }) {
@@ -24,14 +23,13 @@ export default function LogInScreen({ navigation }) {
   const [googleLoading, setGoogleLoading] = useState(false);
   const fadeAnim = useState(new Animated.Value(0))[0];
 
-  // ✅ Configuración del flujo de Google
   const [request, response, promptAsync] = useAuthRequest({
-    expoClientId: CLIENT_ID, // el de Expo
-    webClientId: CLIENT_ID,  // el de Web
-    iosClientId: CLIENT_ID,  // si también usas iOS, pon el correcto aquí
-    androidClientId: CLIENT_ID, // si usas Android, ponlo aquí
+    expoClientId: CLIENT_ID, // Expo Client ID
+    webClientId: CLIENT_ID,  // Web Client ID
+    iosClientId: CLIENT_ID,  // iOS Client ID
+    androidClientId: CLIENT_ID, // Android Client ID
     redirectUri: makeRedirectUri({
-      native: "com.app_pf:/oauthredirect", // 👈 debe coincidir con tu app.json
+      native: "com.app_pf:/oauthredirect", // App.json -> scheme
     }),
   });
 
@@ -43,7 +41,7 @@ export default function LogInScreen({ navigation }) {
     }).start();
   }, []);
 
-  // ✅ Efecto para manejar la respuesta de Google
+  // Efecto para manejar la respuesta de Google
   useEffect(() => {
     const logInWithGoogle = async () => {
       try {
@@ -69,7 +67,7 @@ export default function LogInScreen({ navigation }) {
     logInWithGoogle();
   }, [response]);
 
-  // ✅ Login con correo y contraseña
+  // Login con correo y contraseña
   const handleLogin = async () => {
     if (!correo || !contraseña) {
       Alert.alert('Error', 'Por favor ingresa correo y contraseña');
@@ -232,7 +230,6 @@ export default function LogInScreen({ navigation }) {
   );
 };
 
-// 🎨 Estilos (los tuyos)
 const styles = StyleSheet.create({
   safeStyle: { flex: 1, backgroundColor: '#fff' },
   keyboardView: { flex: 1 },
