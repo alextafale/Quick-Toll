@@ -21,6 +21,8 @@
       }
     },
     "android": {
+        "package": "com.alextafale.quicktoll"
+    },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -40,4 +42,3 @@
       }
     }
   }
-}

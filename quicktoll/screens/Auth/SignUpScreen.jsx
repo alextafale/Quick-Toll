@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert, TextInput, SafeAreaView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, TextInput } from 'react-native';
 import NavigationBar from '../../components/NavigationBar';
 import { Ionicons } from '@expo/vector-icons';
 import * as AuthSession from 'expo-auth-session';
@@ -7,10 +7,18 @@ import * as WebBrowser from 'expo-web-browser';
 import { GoogleAuthProvider, signInWithCredential, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../../Backend/Firebase/FirebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 WebBrowser.maybeCompleteAuthSession();
 
+// Configuración del redirect URI
 const useProxy = true;
-const redirectUri = AuthSession.makeRedirectUri({ useProxy });
+const redirectUri = AuthSession.makeRedirectUri({
+  useProxy,
+  native: 'quicktoll://oauthredirect'
+});
+
+// Configuración de Google
+const GOOGLE_CLIENT_ID = '394613431143-vbreqlodokbfk63lr68u1cnpj9vs5elb.apps.googleusercontent.com';
 
 const SignUpScreen = ({ navigation }) => {
     const [nombre, setNombre] = useState('');
@@ -20,47 +28,46 @@ const SignUpScreen = ({ navigation }) => {
     const [secureEntry, setSecureEntry] = useState(true);
     const [secureEntryConfirm, setSecureEntryConfirm] = useState(true);
     const [loading, setLoading] = useState(false);
+    const [googleLoading, setGoogleLoading] = useState(false);
 
-    const handleSignUpWithGoogle = async () => {
+    // Configuración de AuthRequest
+    const [request, response, promptAsync] = AuthSession.useAuthRequest(
+        {
+            clientId: GOOGLE_CLIENT_ID,
+            scopes: ['openid', 'profile', 'email'],
+            redirectUri: redirectUri,
+        },
+        { useProxy }
+    );
+
+    useEffect(() => {
+        if (response?.type === 'success') {
+            handleGoogleSignIn(response.params);
+        }
+    }, [response]);
+
+    const handleGoogleSignIn = async (params) => {
         try {
-            setLoading(true);
+            setGoogleLoading(true);
             
-            // Configurar la solicitud de autenticación
-            const request = new AuthSession.AuthRequest({
-                clientId: '394613431143-vbreqlodokbfk63lr68u1cnpj9vs5elb.apps.googleusercontent.com',
-                scopes: ['openid', 'profile', 'email'],
-                redirectUri: redirectUri,
-            });
-
-            // Iniciar el flujo de autenticación
-            const result = await AuthSession.startAsync({
-                authUrl: request.url,
-                returnUrl: redirectUri,
-            });
-
-            if (result.type === 'success') {
-                const { id_token } = result.params;
+            if (params.id_token) {
+                const credential = GoogleAuthProvider.credential(params.id_token);
+                await signInWithCredential(auth, credential);
                 
-                if (id_token) {
-                    // Crear credencial de Firebase con el token de Google
-                    const credential = GoogleAuthProvider.credential(id_token);
-                    await signInWithCredential(auth, credential);
-                    
-                    Alert.alert('Éxito', 'Registro con Google exitoso');
-                    navigation.replace('MainApp', { screen: 'HomeScreen' });
-                } else {
-                    throw new Error('No se recibió token de Google');
-                }
+                Alert.alert('Éxito', 'Registro con Google exitoso');
+                navigation.replace('MainApp', { screen: 'HomeScreen' });
             } else {
-                throw new Error('La autenticación fue cancelada');
+                throw new Error('No se recibió token de Google');
             }
         } catch (error) {
             console.error("Error signing up with Google:", error);
             Alert.alert('Error', 'No se pudo registrar con Google: ' + error.message);
         } finally {
-            setLoading(false);
+            setGoogleLoading(false);
         }
     };
+
+
 
     const handleEmailSignUp = async () => {
         if (!nombre || !correo || !contraseña || !confirmarContraseña) {
@@ -115,13 +122,15 @@ const SignUpScreen = ({ navigation }) => {
         }
     };
 
+    const isLoading = loading || googleLoading;
+
     return (
         <SafeAreaView style={styles.safeStyle}>
             <View style={styles.container}>
                 <Text style={styles.title}>Registro</Text>
                 
                 <View style={styles.containers}>
-                    {/* Campos de nombre, correo, contraseña (igual que antes) */}
+                    {/* Campos de formulario */}
                     <View style={styles.inputWrapper}>
                         <TextInput 
                             style={styles.inputs} 
@@ -189,24 +198,23 @@ const SignUpScreen = ({ navigation }) => {
 
                 <View style={styles.containers}>
                     <TouchableOpacity 
-                        style={[styles.button, loading && styles.buttonDisabled]} 
+                        style={[styles.button, isLoading && styles.buttonDisabled]} 
                         onPress={handleEmailSignUp}
-                        disabled={loading}
+                        disabled={isLoading}
                     >
                         <Text style={styles.buttonText}>
                             {loading ? 'Registrando...' : 'Registrarse'}
                         </Text>
                     </TouchableOpacity>
 
-                    {/* Botón de Google actualizado */}
                     <TouchableOpacity 
-                        style={[styles.googleButton, loading && styles.buttonDisabled]}
-                        onPress={handleSignUpWithGoogle}
-                        disabled={loading}
+                        style={[styles.googleButton, isLoading && styles.buttonDisabled]}
+                        onPress={handleGoogleSignIn}
+                        disabled={isLoading}
                     >
                         <Ionicons name="logo-google" size={20} color="#DB4437" />
                         <Text style={styles.googleButtonText}>
-                            {loading ? 'Registrando...' : 'Registrarse con Google'}
+                            {googleLoading ? 'Registrando...' : 'Registrarse con Google'}
                         </Text>
                     </TouchableOpacity>
                 </View>
@@ -221,7 +229,7 @@ const SignUpScreen = ({ navigation }) => {
     );
 };
 
-// Tus estilos existentes se mantienen igual...
+// Tus estilos se mantienen igual...
 const styles = StyleSheet.create({
     safeStyle: {
         flex: 1,

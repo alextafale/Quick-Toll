@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   View, 
   Text, 
-  SafeAreaView, 
   ScrollView, 
   TouchableOpacity, 
   StyleSheet, 
@@ -16,7 +15,7 @@ import {
   Keyboard
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const AddVehicleScreen = ({ navigation }) => {
   const [formData, setFormData] = useState({
     vehicleName: '',

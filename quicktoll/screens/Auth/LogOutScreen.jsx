@@ -25,7 +25,6 @@ export default function SettingsScreen({ navigation }) {
     <View style={styles.container}>
       <Text style={styles.title}>Configuración</Text>
       
-      {/* Otras opciones de configuración... */}
       
       <TouchableOpacity 
         style={styles.logoutButton}

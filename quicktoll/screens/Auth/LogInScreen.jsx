@@ -24,12 +24,11 @@ export default function LogInScreen({ navigation }) {
   const fadeAnim = useState(new Animated.Value(0))[0];
 
   const [request, response, promptAsync] = useAuthRequest({
-    expoClientId: CLIENT_ID, // Expo Client ID
-    webClientId: CLIENT_ID,  // Web Client ID
-    iosClientId: CLIENT_ID,  // iOS Client ID
-    androidClientId: CLIENT_ID, // Android Client ID
+    clientId: CLIENT_ID,
+    scopes: ['openid', 'profile', 'email'],
     redirectUri: makeRedirectUri({
-      native: "com.app_pf:/oauthredirect", // App.json -> scheme
+      scheme: 'quicktoll', 
+      path: 'oauthredirect'
     }),
   });
 

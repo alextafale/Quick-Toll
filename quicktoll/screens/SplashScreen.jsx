@@ -1,6 +1,6 @@
-import { View, Text, SafeAreaView, StyleSheet, Platform, ImageBackground,StatusBar } from 'react-native';
+import { View, Text, StyleSheet, Platform, ImageBackground,StatusBar } from 'react-native';
 import { useEffect } from 'react';
-
+import { SafeAreaView } from 'react-native-safe-area-context';
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
